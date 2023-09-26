@@ -1,0 +1,12 @@
+.constructor__price {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 40px;
+}
+
+.price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
