@@ -2,9 +2,7 @@ import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import Tabs from '../Tabs/Tabs';
 import IngredientItem from "../IngredientItem/IngredientItem";
-import ingredientImage from '../../assets/images/ingridient-item-01.png';
 import PropTypes from "prop-types";
-import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 
 const BurgerIngredients = (props) => {
     return (
@@ -14,24 +12,30 @@ const BurgerIngredients = (props) => {
             <div className={`${styles.ingredients} pb-6`}>
                 <h3 className="text text_type_main-medium pb-6">Булки</h3>
                 <div className={`${styles.ingredients__container} pb-10`}>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i" count={1}/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
+                    {props.data.map((item) => {
+                        if (item.type === 'bun') {
+                            return <IngredientItem key={item._id} image={item.image} price={item.price} name={item.name} count={1}/>
+                        }
+                        return null;
+                    })}
                 </div>
                 <h3 className="text text_type_main-medium pb-6">Соусы</h3>
                 <div className={`${styles.ingredients__container} pb-10`}>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
+                    {props.data.map((item) => {
+                        if (item.type === 'sauce') {
+                            return <IngredientItem key={item._id} image={item.image} price={item.price} name={item.name} count={1}/>
+                        }
+                        return null;
+                    })}
                 </div>
                 <h3 className="text text_type_main-medium pb-6">Начинки</h3>
                 <div className={`${styles.ingredients__container} pb-10`}>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
-                    <IngredientItem image={ingredientImage} price="20" name="Краторная булка N-200i"/>
+                    {props.data.map((item) => {
+                        if (item.type === 'main') {
+                            return <IngredientItem key={item._id} image={item.image} price={item.price} name={item.name} count={1}/>
+                        }
+                        return null;
+                    })}
                 </div>
             </div>
         </section>
@@ -39,7 +43,20 @@ const BurgerIngredients = (props) => {
 };
 
 BurgerIngredients.propTypes = {
-    data: PropTypes.array,
+    data: PropTypes.arrayOf(PropTypes.shape({
+        _id: PropTypes.string,
+        name: PropTypes.string,
+        type: PropTypes.string,
+        proteins: PropTypes.number,
+        fat: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        calories: PropTypes.number,
+        price: PropTypes.number,
+        image: PropTypes.string,
+        image_mobile: PropTypes.string,
+        image_large: PropTypes.string,
+        __v: PropTypes.number
+    }))
 };
 
 export default BurgerIngredients;

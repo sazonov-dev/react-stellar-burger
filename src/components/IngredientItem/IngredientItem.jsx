@@ -4,16 +4,16 @@ import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-c
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import PropTypes from "prop-types";
 
-const IngredientItem = (props) => {
+const IngredientItem = ({image, name, price, count}) => {
     return (
         <div className={`${styles.ingredient} pl-4 pr-4`}>
-            <img className={styles.ingredient__img} src={props.image} alt={props.name}/>
+            <img className={styles.ingredient__img} src={image} alt={name}/>
             <div className={styles.ingredient__price}>
-                <p className="text text_type_digits-default">{props.price}</p>
+                <p className="text text_type_digits-default">{price}</p>
                 <CurrencyIcon type="primary" />
             </div>
-            <p className="text text_type_main-default">{props.name}</p>
-            <Counter count={props.count ? props.count : 0} size="default" extraClass="m-1" />
+            <p className="text text_type_main-default">{name}</p>
+            <Counter count={count ? count : 0} size="default" extraClass="m-1" />
         </div>
     );
 };

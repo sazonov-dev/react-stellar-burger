@@ -4,3 +4,11 @@
   background-color: #131316;
   color: #f2f2f3;
 }
+
+.main {
+  display: flex;
+  max-width: 1240px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 40px;
+}
