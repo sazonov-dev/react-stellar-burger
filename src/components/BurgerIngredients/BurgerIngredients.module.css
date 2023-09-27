@@ -1,0 +1,33 @@
+.burgerIngredient {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+}
+
+.ingredients {
+    max-height: 492px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    padding-right: 8px;
+}
+
+.ingredients::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2F2F37;
+}
+
+.ingredients::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+}
+
+.ingredients__container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.ingredients__container:last-child {
+    padding-bottom: 0;
+}

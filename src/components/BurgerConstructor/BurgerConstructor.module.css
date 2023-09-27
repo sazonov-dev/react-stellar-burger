@@ -1,0 +1,28 @@
+.constructor {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 600px;
+    width: 100%;
+}
+
+.constructor__container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+    overflow-y: scroll;
+    max-height: 568px;
+    padding-right: 8px;
+}
+
+.constructor__container::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2F2F37;
+    padding-left: 10px;
+}
+
+.constructor__container::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+    padding-left: 10px;
+}

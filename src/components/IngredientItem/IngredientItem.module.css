@@ -1,0 +1,23 @@
+.ingredient {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+    min-height: 208px;
+    max-width: 240px;
+    position: relative;
+
+}
+
+.ingredient__price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ingredient__img {
+    width: 240px;
+    object-fit: cover;
+}
