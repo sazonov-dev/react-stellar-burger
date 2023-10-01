@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerConstructor.module.css';
 import ConstructorPrice from "../ConstructorPrice/ConstructorPrice";
@@ -45,7 +45,6 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
             return newData.middle.push(
                 <ConstructorElementMiddle key={item._id}>
                     <ConstructorElement
-                        key={item._id}
                         text={item.name}
                         price={item.price}
                         thumbnail={item.image}
@@ -57,23 +56,22 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
         return newData;
     }
 
-    useEffect(() => {
-        const newData = preparedDataToRender(data)
-        setPreparedData(newData)
-    }, []);
+    const preparedComponents = useMemo(() => {
+        return preparedDataToRender(data);
+    },[])
 
-    if (preparedData === null) {
+    if (!preparedComponents) {
         return (
             <div>Загрузка...</div>
         )
     } else {
-        const topElements = preparedData.top.map((item) => {
+        const topElements = preparedComponents.top.map((item) => {
             return item
         })
-        const middleElements = preparedData.middle.map((item) => {
+        const middleElements = preparedComponents.middle.map((item) => {
             return item
         })
-        const bottomElements = preparedData.bottom.map((item) => {
+        const bottomElements = preparedComponents.bottom.map((item) => {
             return item
         })
 
@@ -81,13 +79,13 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
             <section className={`${styles.constructor} pt-25`}>
                 <div className={styles.constructor__container}>
                     {
-                        topElements.map((item) => item)
+                        topElements
                     }
                     {
-                        middleElements.map((item) => item)
+                        middleElements
                     }
                     {
-                        bottomElements.map((item) => item)
+                        bottomElements
                     }
                 </div>
                 <ConstructorPrice price={100} openModal={openModal} closeModal={closeModal}/>

@@ -8,7 +8,7 @@ import Modal from "../Modal/Modal";
 
 
 function App() {
-    const [state, setState] = useState({isLoading: false, hasError: false, data: []});
+    const [pageData, setPageData] = useState({isLoading: false, hasError: false, data: []});
     const [isOpen, setIsOpen] = useState(false);
     const [modalComponent, setModalComponent] = useState(null);
 
@@ -23,11 +23,17 @@ function App() {
     }
 
     useEffect(() => {
-        setState({...state, isLoading: true, hasError: false});
+        setPageData({...pageData, isLoading: true, hasError: false});
         fetch(apiUrl)
-            .then((response) => response.json())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                } else {
+                    throw new Error('Ошибка сети или сервера');
+                }
+            })
             .then((data) => {
-                setState((prevState) => ({
+                setPageData((prevState) => ({
                     ...prevState,
                     isLoading: false,
                     hasError: false,
@@ -35,36 +41,31 @@ function App() {
                 }));
             })
             .catch((error) => {
-                setState((prevState) => ({
+                setPageData((prevState) => ({
                     ...prevState,
                     isLoading: false,
                     hasError: true
                 }));
             })
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeModal(null, false);
-            }
-        })
     }, []);
 
   return (
     <div className={styles.app}>
         {
-            state.isLoading === false && state.data.length > 0
+            pageData.isLoading === false && pageData.data.length > 0
                 ?
                     <>
                         <AppHeader/>
                         <main className={styles.main}>
-                            <BurgerIngredients data={state.data} openModal={openModal} closeModal={closeModal}/>
-                            <BurgerConstructor data={state.data} openModal={openModal} closeModal={closeModal}/>
+                            <BurgerIngredients data={pageData.data} openModal={openModal} closeModal={closeModal}/>
+                            <BurgerConstructor data={pageData.data} openModal={openModal} closeModal={closeModal}/>
                         </main>
-                        <Modal open={isOpen} component={modalComponent} closeModal={closeModal}>
+                        <Modal open={isOpen} closeModal={closeModal}>
+                            {modalComponent}
                         </Modal>
                     </>
                 :
-                state.hasError
+                pageData.hasError
                     ? <div className={`${styles.error} text text_type_main-large`}>Произошла ошибка, перезагрузите страницу</div>
                     : <div className={`${styles.error} text text_type_main-large`}>Идет загрузка...</div>
         }
