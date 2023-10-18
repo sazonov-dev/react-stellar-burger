@@ -3,14 +3,13 @@ import styles from './OrderDetails.module.css';
 import doneIcon from '../../assets/images/done.png';
 import CloseButton from "../CloseButton/CloseButton";
 import PropTypes from "prop-types";
-import {basketContext} from "../../services/basketContext";
+import {BasketContext} from "../../services/BasketContext";
 
-const OrderDetails = ({closeModal}) => {
-    const {basketData} = useContext(basketContext)
+const OrderDetails = () => {
+    const {basketData} = useContext(BasketContext)
 
     return (
         <div className={`${styles.order} pt-30 pb-30`}>
-            <CloseButton style={{position: 'absolute', top: '60px', right: '40px'}} closeModal={closeModal}/>
             <h2 className={`${styles.id} text text_type_digits-large pb-8`}>{basketData.orderId}</h2>
             <p className={`text text_type_main-medium pb-15`}>идентификатор заказа</p>
             <img className={`pb-15`} src={doneIcon} alt="Иконка готовности заказа"/>
@@ -19,9 +18,5 @@ const OrderDetails = ({closeModal}) => {
         </div>
     );
 };
-
-OrderDetails.propTypes = {
-    closeModal: PropTypes.func,
-}
 
 export default OrderDetails;

@@ -3,8 +3,9 @@ import ReactDOM from "react-dom";
 import styles from './Modal.module.css';
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import PropTypes from "prop-types";
+import CloseButton from "../CloseButton/CloseButton";
 
-const Modal = ({children, open, closeModal}) => {
+const Modal = ({children, closeModal}) => {
 
     const keyDown = (event) => {
         if (event.key === 'Escape') {
@@ -20,11 +21,10 @@ const Modal = ({children, open, closeModal}) => {
         }
     }, []);
 
-    if (!open) return null;
-
     return ReactDOM.createPortal(
         <>
             <div className={styles.modal}>
+                <CloseButton style={{position: 'absolute', top: '60px', right: '40px'}} closeModal={closeModal}/>
                 {children}
             </div>
             <ModalOverlay closeModal={closeModal}/>

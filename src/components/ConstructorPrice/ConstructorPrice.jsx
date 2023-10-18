@@ -3,13 +3,14 @@ import styles from './ConstructorPrice.module.css';
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import OrderDetails from "../OrderDetails/OrderDetails";
 import PropTypes from "prop-types";
-import {apiUrlOrder} from "../../utils/api";
-import {basketContext} from "../../services/basketContext";
+import {BASE_URL} from "../../utils/api";
+import {BasketContext} from "../../services/BasketContext";
+import {request} from "../../utils/request";
 
 const ConstructorPrice = ({price, openModal, closeModal}) => {
-    const {basketData, setBasketData} = useContext(basketContext)
+    const {basketData, setBasketData} = useContext(BasketContext)
     const addOrder = () => {
-        fetch(apiUrlOrder, {
+        request(BASE_URL + 'orders', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -19,20 +20,11 @@ const ConstructorPrice = ({price, openModal, closeModal}) => {
                 ingredients: basketData.itemsId
             })
         })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    throw new Error('Ошибка сети или сервера');
-                }
-            })
             .then((data) => {
                 setBasketData({...basketData, orderId: data.order.number});
                 openModal(<OrderDetails closeModal={closeModal}/>, true)
             })
-            .catch((error) => {
-                throw new Error(error.message);
-            })
+            .catch((error) => console.error(error.message))
     }
 
     return (
@@ -42,9 +34,11 @@ const ConstructorPrice = ({price, openModal, closeModal}) => {
                 <CurrencyIcon type="primary" />
             </p>
             {/*<Button htmlType="button" type="primary" size="large" onClick={() => openModal(<OrderDetails closeModal={closeModal}/>, true)}>*/}
-            <Button htmlType="button" type="primary" size="large" onClick={() => addOrder()}>
+            {basketData.itemsId.length > 0 ? <Button htmlType="button" type="primary" size="large" onClick={addOrder}>
                 Оформить заказ
-            </Button>
+            </Button> : <Button htmlType="button" type="primary" size="large" disabled>
+                Оформить заказ
+            </Button>}
         </div>
     );
 };

@@ -3,12 +3,11 @@ import styles from './IngredientDetails.module.css';
 import CloseButton from "../CloseButton/CloseButton";
 import PropTypes from "prop-types";
 
-const IngredientDetails = ({item, closeModal}) => {
+const IngredientDetails = ({item}) => {
     return (
         <div className={`pt-10 pb-15`}>
             <div className={`${styles.header} pl-10 pr-10`}>
                 <h2 className={`text text_type_main-large`}>Детали ингредиента</h2>
-                <CloseButton closeModal={closeModal}/>
             </div>
             <div className={styles.container}>
                 <img className={`pb-4`} src={item.image_large} alt="Изображение ингредиента"/>
@@ -37,7 +36,6 @@ const IngredientDetails = ({item, closeModal}) => {
 };
 
 IngredientDetails.propTypes = {
-    closeModal: PropTypes.func,
     item: PropTypes.object
 }
 

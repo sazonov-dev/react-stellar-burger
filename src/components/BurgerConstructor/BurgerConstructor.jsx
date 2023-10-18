@@ -1,14 +1,15 @@
-import React, {useMemo, useContext, useEffect} from 'react';
+import React, {useMemo, useContext} from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerConstructor.module.css';
 import ConstructorPrice from "../ConstructorPrice/ConstructorPrice";
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import ConstructorElementMiddle from "../ConstructorElementMiddle/ConstructorElementMiddle";
-import {basketContext} from "../../services/basketContext";
+import {BasketContext} from "../../services/BasketContext";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
 
 const BurgerConstructor = ({openModal, closeModal}) => {
-    const {basketData} = useContext(basketContext);
-    const {totalPriceState} = useContext(basketContext);
+    const {basketData} = useContext(BasketContext);
+    const {totalPriceState} = useContext(BasketContext);
 
     const preparedDataToRender = (data) => {
         let bunDirection = false;
@@ -26,9 +27,10 @@ const BurgerConstructor = ({openModal, closeModal}) => {
                     key={item._id}
                     type="top"
                     isLocked={true}
-                    text={item.name}
+                    text={item.name + ' (верх)'}
                     price={item.price}
                     thumbnail={item.image}
+                    onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}
                 />)
             }
 
@@ -38,14 +40,15 @@ const BurgerConstructor = ({openModal, closeModal}) => {
                     key={item._id}
                     type="bottom"
                     isLocked={true}
-                    text={item.name}
+                    text={item.name + ' (низ)'}
                     price={item.price}
                     thumbnail={item.image}
+                    onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}
                 />)
             }
 
             return newData.middle.push(
-                <ConstructorElementMiddle key={item._id}>
+                <ConstructorElementMiddle key={item._id} onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}>
                     <ConstructorElement
                         text={item.name}
                         price={item.price}

@@ -1,19 +1,19 @@
-import styles from "./app.module.css";
+import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngredients from "../BurgerIngredients/BurgerIngredients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import {useEffect, useState} from "react";
-import {apiUrl} from '../../utils/api';
+import {BASE_URL} from '../../utils/api';
 import Modal from "../Modal/Modal";
 import React, {useReducer} from 'react'
-import {appDataContext} from "../../services/appDataContext";
-import {basketContext} from "../../services/basketContext";
+import {AppDataContext} from "../../services/AppDataContext";
+import {BasketContext} from "../../services/BasketContext";
 import {initialState, reducer} from "../../utils/totalPriceReducer";
-
+import {request} from "../../utils/request";
 
 function App() {
     const [pageData, setPageData] = useState({isLoading: false, hasError: false, data: []});
-    const [basketData, setBasketData] = useState({basket: [], itemsId: [], orderId: 0})
+    const [basketData, setBasketData] = useState({basket: [], bunId: null, bunCount: 0, itemsId: [], orderId: 0})
     const [isOpen, setIsOpen] = useState(false);
     const [modalComponent, setModalComponent] = useState(null);
     const [totalPriceState, totalPriceDispatcher] = useReducer(reducer, initialState, undefined);
@@ -30,14 +30,7 @@ function App() {
 
     useEffect(() => {
         setPageData({...pageData, isLoading: true, hasError: false});
-        fetch(apiUrl)
-            .then((response) => {
-                if (response.ok) {
-                    return response.json()
-                } else {
-                    throw new Error('Ошибка сети или сервера');
-                }
-            })
+        request(BASE_URL + 'ingredients', {method: 'GET'})
             .then((data) => {
                 setPageData((prevState) => ({
                     ...prevState,
@@ -47,18 +40,14 @@ function App() {
                 }));
             })
             .catch((error) => {
-                setPageData((prevState) => ({
-                    ...prevState,
-                    isLoading: false,
-                    hasError: true
-                }));
+                console.error(error.message);
             })
     }, []);
 
   return (
     <div className={styles.app}>
-        <appDataContext.Provider value={{pageData, setPageData}}>
-            <basketContext.Provider value={{basketData, setBasketData, totalPriceDispatcher, totalPriceState}}>
+        <AppDataContext.Provider value={{pageData, setPageData}}>
+            <BasketContext.Provider value={{basketData, setBasketData, totalPriceDispatcher, totalPriceState}}>
                 {
                     pageData.isLoading === false && pageData.data.length > 0
                         ?
@@ -68,17 +57,19 @@ function App() {
                                     <BurgerIngredients openModal={openModal} closeModal={closeModal}/>
                                     <BurgerConstructor openModal={openModal} closeModal={closeModal}/>
                                 </main>
-                                <Modal open={isOpen} closeModal={closeModal}>
-                                    {modalComponent}
-                                </Modal>
+                                {isOpen && (
+                                    <Modal closeModal={closeModal}>
+                                        {modalComponent}
+                                    </Modal>
+                                )}
                             </>
                         :
                         pageData.hasError
                             ? <div className={`${styles.error} text text_type_main-large`}>Произошла ошибка, перезагрузите страницу</div>
                             : <div className={`${styles.error} text text_type_main-large`}>Идет загрузка...</div>
                 }
-            </basketContext.Provider>
-        </appDataContext.Provider>
+            </BasketContext.Provider>
+        </AppDataContext.Provider>
     </div>
   );
 }
