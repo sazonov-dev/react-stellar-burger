@@ -1,12 +1,14 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useMemo, useContext, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerConstructor.module.css';
 import ConstructorPrice from "../ConstructorPrice/ConstructorPrice";
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import ConstructorElementMiddle from "../ConstructorElementMiddle/ConstructorElementMiddle";
+import {basketContext} from "../../services/basketContext";
 
-const BurgerConstructor = ({data, openModal, closeModal}) => {
-    const [preparedData, setPreparedData] = useState(null)
+const BurgerConstructor = ({openModal, closeModal}) => {
+    const {basketData} = useContext(basketContext);
+    const {totalPriceState} = useContext(basketContext);
 
     const preparedDataToRender = (data) => {
         let bunDirection = false;
@@ -57,8 +59,8 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
     }
 
     const preparedComponents = useMemo(() => {
-        return preparedDataToRender(data);
-    },[])
+        return preparedDataToRender(basketData.basket);
+    },[basketData])
 
     if (!preparedComponents) {
         return (
@@ -88,7 +90,7 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
                         bottomElements
                     }
                 </div>
-                <ConstructorPrice price={100} openModal={openModal} closeModal={closeModal}/>
+                <ConstructorPrice price={totalPriceState.totalPrice} openModal={openModal} closeModal={closeModal}/>
             </section>
         );
     }
@@ -96,20 +98,6 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
 
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        type: PropTypes.string,
-        proteins: PropTypes.number,
-        fat: PropTypes.number,
-        carbohydrates: PropTypes.number,
-        calories: PropTypes.number,
-        price: PropTypes.number,
-        image: PropTypes.string,
-        image_mobile: PropTypes.string,
-        image_large: PropTypes.string,
-        __v: PropTypes.number
-    })),
     openModal: PropTypes.func,
     closeModal: PropTypes.func
 };
