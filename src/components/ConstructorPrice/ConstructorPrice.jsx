@@ -21,7 +21,7 @@ const ConstructorPrice = ({price, openModal, closeModal}) => {
             })
         })
             .then((data) => {
-                setBasketData({...basketData, orderId: data.order.number});
+                setBasketData({...basketData, orderId: data.order.number, basket: [], itemsId: []});
                 openModal(<OrderDetails closeModal={closeModal}/>, true)
             })
             .catch((error) => console.error(error.message))
