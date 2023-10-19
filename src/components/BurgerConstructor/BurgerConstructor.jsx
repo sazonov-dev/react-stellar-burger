@@ -1,12 +1,15 @@
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useMemo, useContext} from 'react';
 import PropTypes from 'prop-types';
 import styles from './BurgerConstructor.module.css';
 import ConstructorPrice from "../ConstructorPrice/ConstructorPrice";
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import ConstructorElementMiddle from "../ConstructorElementMiddle/ConstructorElementMiddle";
+import {BasketContext} from "../../services/BasketContext";
+import IngredientDetails from "../IngredientDetails/IngredientDetails";
 
-const BurgerConstructor = ({data, openModal, closeModal}) => {
-    const [preparedData, setPreparedData] = useState(null)
+const BurgerConstructor = ({openModal, closeModal}) => {
+    const {basketData} = useContext(BasketContext);
+    const {totalPriceState} = useContext(BasketContext);
 
     const preparedDataToRender = (data) => {
         let bunDirection = false;
@@ -24,9 +27,10 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
                     key={item._id}
                     type="top"
                     isLocked={true}
-                    text={item.name}
+                    text={item.name + ' (верх)'}
                     price={item.price}
                     thumbnail={item.image}
+                    onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}
                 />)
             }
 
@@ -36,14 +40,15 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
                     key={item._id}
                     type="bottom"
                     isLocked={true}
-                    text={item.name}
+                    text={item.name + ' (низ)'}
                     price={item.price}
                     thumbnail={item.image}
+                    onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}
                 />)
             }
 
             return newData.middle.push(
-                <ConstructorElementMiddle key={item._id}>
+                <ConstructorElementMiddle key={item._id} onClick={() => openModal(<IngredientDetails closeModal={closeModal} item={item}/>, true)}>
                     <ConstructorElement
                         text={item.name}
                         price={item.price}
@@ -57,8 +62,8 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
     }
 
     const preparedComponents = useMemo(() => {
-        return preparedDataToRender(data);
-    },[])
+        return preparedDataToRender(basketData.basket);
+    },[basketData])
 
     if (!preparedComponents) {
         return (
@@ -88,7 +93,7 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
                         bottomElements
                     }
                 </div>
-                <ConstructorPrice price={100} openModal={openModal} closeModal={closeModal}/>
+                <ConstructorPrice price={totalPriceState.totalPrice} openModal={openModal} closeModal={closeModal}/>
             </section>
         );
     }
@@ -96,20 +101,6 @@ const BurgerConstructor = ({data, openModal, closeModal}) => {
 
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-        _id: PropTypes.string,
-        name: PropTypes.string,
-        type: PropTypes.string,
-        proteins: PropTypes.number,
-        fat: PropTypes.number,
-        carbohydrates: PropTypes.number,
-        calories: PropTypes.number,
-        price: PropTypes.number,
-        image: PropTypes.string,
-        image_mobile: PropTypes.string,
-        image_large: PropTypes.string,
-        __v: PropTypes.number
-    })),
     openModal: PropTypes.func,
     closeModal: PropTypes.func
 };
